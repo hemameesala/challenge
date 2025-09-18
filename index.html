@@ -1,154 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Dustbin Dashboard</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f7f9;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <title>Smart Workout Posture Detection Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f8;
+            color: #333;
+        }
 
-    header {
-      background-color: #2c3e50;
-      padding: 20px;
-      color: white;
-      text-align: center;
-    }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-    main {
-      padding: 30px;
-    }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+            justify-content: center;
+        }
 
-    .dashboard {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
+        .video-container, .status-container, .guidance-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
 
-    .card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 20px;
-      width: 300px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+        .video-container {
+            flex: 1 1 500px;
+        }
 
-    .card h2 {
-      font-size: 1.3em;
-      margin-bottom: 10px;
-    }
+        .status-container {
+            flex: 1 1 300px;
+        }
 
-    .status {
-      font-size: 2em;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+        .guidance-container {
+            flex: 1 1 100%;
+        }
 
-    .good {
-      color: green;
-    }
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
 
-    .medium {
-      color: orange;
-    }
+        .status {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
 
-    .bad {
-      color: red;
-    }
+        .status.good {
+            color: green;
+        }
 
-    .btn-refresh {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #3498db;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        .status.bad {
+            color: red;
+        }
 
-    .btn-refresh:hover {
-      background-color: #2980b9;
-    }
+        .guidance-message {
+            font-size: 1.1em;
+            margin-top: 10px;
+            background: #e8f5e9;
+            padding: 10px;
+            border-left: 5px solid #4caf50;
+        }
 
-    footer {
-      text-align: center;
-      font-size: 0.9em;
-      padding: 15px;
-      color: #888;
-    }
-  </style>
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #ecf0f1;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
 <header>
-  <h1>Smart Dustbin Monitoring Dashboard</h1>
+    <h1>🏋️ Smart Workout Posture Detection & Guidance</h1>
 </header>
 
-<main>
-  <div class="dashboard">
-    <div class="card">
-      <h2>Bin Fill Level</h2>
-      <p id="fillLevel" class="status">Loading...</p>
+<div class="container">
+
+    <div class="video-container">
+        <h2>Live Workout Feed</h2>
+        <video id="video" autoplay muted playsinline></video>
     </div>
-    <div class="card">
-      <h2>Lid Status</h2>
-      <p id="lidStatus" class="status">Loading...</p>
+
+    <div class="status-container">
+        <h2>Posture Status</h2>
+        <div id="postureStatus" class="status">Detecting...</div>
     </div>
-    <div class="card">
-      <h2>Controls</h2>
-      <button class="btn-refresh" onclick="simulateData()">Refresh Status</button>
-      <p><small>Auto-updates every 5 seconds.</small></p>
+
+    <div class="guidance-container">
+        <h2>Guidance</h2>
+        <div id="guidance" class="guidance-message">Please start your workout and face the camera.</div>
     </div>
-  </div>
-</main>
+
+</div>
 
 <footer>
-  &copy; 2025 SmartDustbin Inc. All rights reserved.
+    &copy; 2025 Smart Fitness AI | All Rights Reserved
 </footer>
 
 <script>
-  const fillElement = document.getElementById("fillLevel");
-  const lidElement = document.getElementById("lidStatus");
+    // Access webcam
+    const video = document.getElementById('video');
 
-  function simulateData() {
-    // Simulate fill level (0 to 100%)
-    const fill = Math.floor(Math.random() * 101);
-    let fillStatus = "";
-    let fillClass = "";
-
-    if (fill < 40) {
-      fillStatus = `Empty (${fill}%)`;
-      fillClass = "good";
-    } else if (fill < 80) {
-      fillStatus = `Half Full (${fill}%)`;
-      fillClass = "medium";
-    } else {
-      fillStatus = `Full (${fill}%)`;
-      fillClass = "bad";
+    async function startVideo() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: false
+            });
+            video.srcObject = stream;
+        } catch (err) {
+            alert('Error accessing camera: ' + err.message);
+        }
     }
 
-    // Simulate lid status
-    const lidOpen = Math.random() < 0.5;
-    const lidStatus = lidOpen ? "Open" : "Closed";
-    const lidClass = lidOpen ? "medium" : "good";
+    startVideo();
 
-    fillElement.textContent = fillStatus;
-    fillElement.className = "status " + fillClass;
+    // Fake posture detection logic (you can replace with real model later)
+    const statusText = document.getElementById("postureStatus");
+    const guidanceText = document.getElementById("guidance");
 
-    lidElement.textContent = lidStatus;
-    lidElement.className = "status " + lidClass;
-  }
+    const fakePostures = [
+        { status: "Good Posture", class: "good", message: "Great form! Keep it up." },
+        { status: "Bad Posture", class: "bad", message: "Straighten your back and align your shoulders." },
+        { status: "Detecting...", class: "", message: "Analyzing your posture..." }
+    ];
 
-  // Auto-refresh every 5 seconds
-  setInterval(simulateData, 5000);
-
-  // Initial load
-  window.onload = simulateData;
+    // Cycle through fake postures every 5 seconds
+    let idx = 0;
+    setInterval(() => {
+        const pose = fakePostures[idx % fakePostures.length];
+        statusText.textContent = pose.status;
+        statusText.className = "status " + pose.class;
+        guidanceText.textContent = pose.message;
+        idx++;
+    }, 5000);
 </script>
 
 </body>
