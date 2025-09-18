@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Dustbin Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2c3e50;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      font-size: 2em;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .good {
+      color: green;
+    }
+
+    .medium {
+      color: orange;
+    }
+
+    .bad {
+      color: red;
+    }
+
+    .btn-refresh {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-refresh:hover {
+      background-color: #2980b9;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      padding: 15px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Smart Dustbin Monitoring Dashboard</h1>
+</header>
+
+<main>
+  <div class="dashboard">
+    <div class="card">
+      <h2>Bin Fill Level</h2>
+      <p id="fillLevel" class="status">Loading...</p>
+    </div>
+    <div class="card">
+      <h2>Lid Status</h2>
+      <p id="lidStatus" class="status">Loading...</p>
+    </div>
+    <div class="card">
+      <h2>Controls</h2>
+      <button class="btn-refresh" onclick="simulateData()">Refresh Status</button>
+      <p><small>Auto-updates every 5 seconds.</small></p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 SmartDustbin Inc. All rights reserved.
+</footer>
+
+<script>
+  const fillElement = document.getElementById("fillLevel");
+  const lidElement = document.getElementById("lidStatus");
+
+  function simulateData() {
+    // Simulate fill level (0 to 100%)
+    const fill = Math.floor(Math.random() * 101);
+    let fillStatus = "";
+    let fillClass = "";
+
+    if (fill < 40) {
+      fillStatus = `Empty (${fill}%)`;
+      fillClass = "good";
+    } else if (fill < 80) {
+      fillStatus = `Half Full (${fill}%)`;
+      fillClass = "medium";
+    } else {
+      fillStatus = `Full (${fill}%)`;
+      fillClass = "bad";
+    }
+
+    // Simulate lid status
+    const lidOpen = Math.random() < 0.5;
+    const lidStatus = lidOpen ? "Open" : "Closed";
+    const lidClass = lidOpen ? "medium" : "good";
+
+    fillElement.textContent = fillStatus;
+    fillElement.className = "status " + fillClass;
+
+    lidElement.textContent = lidStatus;
+    lidElement.className = "status " + lidClass;
+  }
+
+  // Auto-refresh every 5 seconds
+  setInterval(simulateData, 5000);
+
+  // Initial load
+  window.onload = simulateData;
+</script>
+
+</body>
+</html>
