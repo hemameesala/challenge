@@ -1,151 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Smart Workout Posture Detection Dashboard</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f6f8;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Workout Posture Detection</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+    }
 
-        header {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    header {
+      background-color: #2d3436;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px;
-            gap: 20px;
-            justify-content: center;
-        }
+    main {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 20px;
+    }
 
-        .video-container, .status-container, .guidance-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-        }
+    .video-container, .guidance-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 45%;
+    }
 
-        .video-container {
-            flex: 1 1 500px;
-        }
+    video {
+      width: 100%;
+      border-radius: 10px;
+    }
 
-        .status-container {
-            flex: 1 1 300px;
-        }
+    .guidance {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #2d3436;
+    }
 
-        .guidance-container {
-            flex: 1 1 100%;
-        }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #2d3436;
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
 
-        video {
-            width: 100%;
-            border-radius: 8px;
-        }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #0984e3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .status {
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-
-        .status.good {
-            color: green;
-        }
-
-        .status.bad {
-            color: red;
-        }
-
-        .guidance-message {
-            font-size: 1.1em;
-            margin-top: 10px;
-            background: #e8f5e9;
-            padding: 10px;
-            border-left: 5px solid #4caf50;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #ecf0f1;
-            margin-top: 20px;
-        }
-    </style>
+    button:hover {
+      background-color: #74b9ff;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Smart Workout Posture Detection & Guidance</h1>
+  </header>
 
-<header>
-    <h1>🏋️ Smart Workout Posture Detection & Guidance</h1>
-</header>
-
-<div class="container">
-
+  <main>
     <div class="video-container">
-        <h2>Live Workout Feed</h2>
-        <video id="video" autoplay muted playsinline></video>
-    </div>
-
-    <div class="status-container">
-        <h2>Posture Status</h2>
-        <div id="postureStatus" class="status">Detecting...</div>
+      <h2>Live Camera</h2>
+      <video id="webcam" autoplay playsinline muted></video>
+      <button onclick="startDetection()">Start Posture Detection</button>
     </div>
 
     <div class="guidance-container">
-        <h2>Guidance</h2>
-        <div id="guidance" class="guidance-message">Please start your workout and face the camera.</div>
+      <h2>Posture Guidance</h2>
+      <div id="guidance" class="guidance">
+        Press "Start" to begin analyzing your workout posture.
+      </div>
     </div>
+  </main>
 
-</div>
+  <footer>
+    &copy; 2025 SmartFit AI | All Rights Reserved
+  </footer>
 
-<footer>
-    &copy; 2025 Smart Fitness AI | All Rights Reserved
-</footer>
+  <script>
+    const video = document.getElementById('webcam');
+    const guidance = document.getElementById('guidance');
 
-<script>
-    // Access webcam
-    const video = document.getElementById('video');
-
-    async function startVideo() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: false
-            });
-            video.srcObject = stream;
-        } catch (err) {
-            alert('Error accessing camera: ' + err.message);
-        }
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480 },
+          audio: false
+        });
+        video.srcObject = stream;
+      } catch (err) {
+        alert('Error accessing webcam: ' + err);
+      }
     }
 
-    startVideo();
+    function startDetection() {
+      guidance.innerHTML = "Analyzing posture...";
 
-    // Fake posture detection logic (you can replace with real model later)
-    const statusText = document.getElementById("postureStatus");
-    const guidanceText = document.getElementById("guidance");
+      // Simulate pose detection feedback
+      setTimeout(() => {
+        const randomPostures = [
+          "Great form! Keep it up 💪",
+          "Your back is slightly bent. Try to keep it straight.",
+          "Feet too close. Widen your stance.",
+          "Arms not fully extended.",
+          "Posture perfect for squats!",
+          "Keep your head aligned with your spine."
+        ];
+        const index = Math.floor(Math.random() * randomPostures.length);
+        guidance.innerHTML = randomPostures[index];
+      }, 3000);
+    }
 
-    const fakePostures = [
-        { status: "Good Posture", class: "good", message: "Great form! Keep it up." },
-        { status: "Bad Posture", class: "bad", message: "Straighten your back and align your shoulders." },
-        { status: "Detecting...", class: "", message: "Analyzing your posture..." }
-    ];
-
-    // Cycle through fake postures every 5 seconds
-    let idx = 0;
-    setInterval(() => {
-        const pose = fakePostures[idx % fakePostures.length];
-        statusText.textContent = pose.status;
-        statusText.className = "status " + pose.class;
-        guidanceText.textContent = pose.message;
-        idx++;
-    }, 5000);
-</script>
-
+    // Initialize
+    setupCamera();
+  </script>
 </body>
 </html>
